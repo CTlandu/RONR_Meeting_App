@@ -1,0 +1,18 @@
+// 导入 express
+const express = require("express");
+
+// 创建 express 实例
+const app = express();
+
+// 定义服务器端口
+const PORT = process.env.PORT || 3000;
+
+// 设置根路由
+app.get("/", (req, res) => {
+  res.send("Hello, Express!");
+});
+
+// 启动服务器，监听指定端口
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
