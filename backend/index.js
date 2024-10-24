@@ -5,7 +5,11 @@ const express = require("express");
 const app = express();
 
 // 定义服务器端口
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
+
+const connectDB = require("./database/dbconnect");
+
+connectDB();
 
 // 设置根路由
 app.get("/", (req, res) => {
