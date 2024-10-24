@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./Login/Login";
 import Home from "./Home";
 import Webhomepage from "./webhomepage/Webhomepage";
+import Profile from "./profile/profile"
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/webhome" element={<Webhomepage />} />
+        <Route path="/prelogin" element={<Webhomepage />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );
