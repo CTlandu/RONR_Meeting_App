@@ -22,3 +22,7 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT} 服务器运行在端口${PORT}`);
 });
+
+app.use(express.json());
+app.use(cookieParser());
+app.use("/api/auth", authRoutes);

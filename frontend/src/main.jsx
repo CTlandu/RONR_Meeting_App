@@ -7,6 +7,5 @@ const root = ReactDOM.createRoot(document.getElementById("root")); // 获取根�
 root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
