@@ -7,7 +7,9 @@ const app = express();
 // 定义服务器端口
 const PORT = 3000;
 
-const connectDB = require("./database/dbconnect");
+const connectDB = require("./dbconnect");
+const cookieParser = require("cookie-parser");
+const authRoutes = require("./routes/auth");
 
 connectDB();
 
@@ -18,5 +20,5 @@ app.get("/", (req, res) => {
 
 // 启动服务器，监听指定端口
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT} 服务器运行在端口${PORT}`);
 });
