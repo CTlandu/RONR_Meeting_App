@@ -26,9 +26,9 @@ const Webhomepage = () => {
         </div>
 
         <div class="bg-[#9EA5AD] fixed w-[36%] min-w-[300px] h-[60px] bottom-[6%] left-0 z-10">
-            <p class="text-[35px] font-bold absolute right-[10%] top-[15%]">
+            <a href="/about" class="text-[35px] font-bold absolute right-[10%] top-[15%] hover:underline">
                 About US
-            </p>
+            </a>
         </div>
     </body>
   );
