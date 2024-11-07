@@ -1,11 +1,19 @@
-// src/pages/Login.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const Login = () => {
+  const location = useLocation();
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    // Check the query parameter to determine if it's login or register mode
+    const queryParams = new URLSearchParams(location.search);
+    const mode = queryParams.get("mode");
+    setIsRegister(mode === "register");
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
