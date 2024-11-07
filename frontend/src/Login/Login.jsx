@@ -1,20 +1,29 @@
 // src/pages/Login.jsx
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isRegister, setIsRegister] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = isRegister ? "/api/auth/register" : "/api/auth/login";
     try {
-      const response = await axios.post(url, { email, password });
+      const response = await axios.post(
+        url,
+        { email, password },
+        { withCredentials: true }
+      );
       alert(response.data);
+      console.log("Response:", response);
+      navigate("/profile");
     } catch (error) {
       alert(error.response?.data || "An error occurred");
+      console.error("Error:", error);
     }
   };
 
