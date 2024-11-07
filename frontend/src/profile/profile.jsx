@@ -1,7 +1,9 @@
-// src/pages/profile.jsx
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -11,15 +13,15 @@ const Profile = () => {
           <div className="bg-gray-500 rounded-full h-24 w-24 mb-6"></div>
           {/* Username and ID */}
           <div className="w-full mb-4">
-            <div className="bg-gray-600 text-lg font-bold p-2 mb-1">Username</div>
-            <div className="bg-gray-700 p-2">ID</div>
+            <div className="bg-gray-600 text-lg font-bold p-2 mb-1 text-center rounded">Username</div>
+            <div className="bg-gray-700 p-2 text-center rounded">ID</div>
           </div>
         </div>
         {/* Sidebar Options at Bottom */}
         <div className="mt-4">
           <ul className="space-y-2">
-            <li className="cursor-pointer">CHECK RONR</li>
-            <li className="cursor-pointer">HELP</li>
+            <li className="cursor-pointer hover:text-yellow-400 transition duration-200">CHECK RONR</li>
+            <li className="cursor-pointer hover:text-yellow-400 transition duration-200">HELP</li>
           </ul>
         </div>
       </div>
@@ -27,22 +29,28 @@ const Profile = () => {
       {/* Main Content Area */}
       <div className="flex-1 bg-gray-100 flex justify-center items-center">
         <div className="grid grid-cols-2 gap-8">
-          {/* Create a Meeting */}
-          <div className="bg-gray-300 w-40 h-40 flex justify-center items-center font-bold text-lg text-center">
+          {/* Create a Meeting Button */}
+          <button
+            onClick={() => navigate('/createmeeting', { state: { from: 'create' } })}
+            className="bg-gray-500 hover:bg-gray-600 text-white w-40 h-40 flex justify-center items-center font-bold text-lg text-center rounded-lg shadow-md transition duration-300"
+          >
             CREATE A MEETING
-          </div>
-          {/* Join a Meeting */}
-          <div className="bg-gray-300 w-40 h-40 flex justify-center items-center font-bold text-lg text-center">
+          </button>
+          {/* Join a Meeting Button */}
+          <button
+            onClick={() => navigate('/createmeeting', { state: { from: 'join' } })}
+            className="bg-gray-500 hover:bg-gray-600 text-white w-40 h-40 flex justify-center items-center font-bold text-lg text-center rounded-lg shadow-md transition duration-300"
+          >
             JOIN A MEETING
-          </div>
-          {/* Review My Meetings */}
-          <div className="bg-gray-300 w-40 h-40 flex justify-center items-center font-bold text-lg text-center">
-            REVIEW MY MEETINGS
-          </div>
-          {/* Placeholder Box */}
-          <div className="bg-gray-300 w-40 h-40 flex justify-center items-center font-bold text-lg text-center">
+          </button>
+          {/* Review My Meetings Button */}
+          <button className="bg-gray-500 hover:bg-gray-600 text-white w-40 h-40 flex justify-center items-center font-bold text-lg text-center rounded-lg shadow-md transition duration-300">
+            MEETING HISTORY
+          </button>
+          {/* Placeholder Button */}
+          <button className="bg-gray-400 hover:bg-gray-500 text-white w-40 h-40 flex justify-center items-center font-bold text-lg text-center rounded-lg shadow-md transition duration-300">
             ...
-          </div>
+          </button>
         </div>
       </div>
     </div>
