@@ -23,9 +23,9 @@ header {
     background-color: #e0e4e8;
 }
 
-.red { background-color: #ff5f57; }
-.yellow { background-color: #ffbd2e; }
-.green { background-color: #8FBC8F; }
+.red { background-color: #e57373; }
+.yellow { background-color: #fbc02d; }
+.green { background-color: #81c784; }
 
 .portrait{
     background-color: blueviolet;
@@ -60,27 +60,37 @@ header {
     margin-right: 160px;
 }
 
+.all-contents{
+    padding: 0 80px 0 80px;
+}
+
 .content {
     display: flex;
-    padding: 20px;
 }
 
-.seats-vertical {
+.horizontal-seats {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.h-seat {
+    width: 120px;
+    height: 80px;
+    background-color: #d3d6db;
+    border-radius: 4px;
+}
+
+.vertical-seats {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    width: 15%;
-}
-
-.seats-horizontal {
-    display: inline-block;
-    gap: 10px;
-    width: 15%;
 }
 
 .seat {
+    width: 120px;
+    height: 80px;
     background-color: #d3d6db;
-    height: 60px;
     border-radius: 4px;
 }
 
@@ -94,6 +104,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 80%;
 }
 
 .board-title{
@@ -103,35 +114,40 @@ header {
     background-color: #d3d6db;
     padding: 4px 12px;
     border-radius: 8px 8px 0 0;
-    width: 90%;
+    width: 80%;
 }
 
 .board{
     background-color: #e9edf2;
     border-radius: 0 0 8px 8px;
     padding: 10px 0 10px 0;
-    width: 90%;
+    width: 80%;
     height: 100%;
     overflow-y: auto;
 }
 
-.message {
+.messages {
     height: 35px;
     padding: 8px 16px;
     display: grid;
     justify-content: center;
+    gap: 10px;
+}
+
+.message {
+    margin: auto;
+    text-align: center;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: center;
     border-radius: 4px;
     font-weight: bold;
     color: #fff;
-    margin-bottom: 10px;
 }
 
 .last-child{
     height: 10px;
 }
-
-.green { background-color: #81c784; }
-.red { background-color: #e57373; }
 
 .toolkit-container{
     position: fixed;
@@ -153,8 +169,19 @@ header {
 
 .icon{
     display: flex;
-    gap: 20px;
+    gap: 30px;
     cursor: pointer;
+    margin-left: 0;
+}
+
+.member-buttons{
+    gap: 10px;
+    //display: none;
+}
+
+.member-buttons{
+    gap: 10px;
+    display: none;
 }
 
 button {
@@ -164,6 +191,7 @@ button {
     padding: 8px 16px;
     font-weight: bold;
     cursor: pointer;
+    margin-right: 70px;
 }
 
 button:hover {
