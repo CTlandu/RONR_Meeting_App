@@ -1,4 +1,4 @@
-# cs432-web-programming
+# RONR-Meeting-App (For CSCI 432 Web Programming, Fall 2024 W&M)
 
 ## Project Overview
 
