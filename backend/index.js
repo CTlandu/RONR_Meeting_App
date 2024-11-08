@@ -1,5 +1,6 @@
 // 导入 express
 const express = require("express");
+const cors = require("cors"); // 引入 cors
 
 // 创建 express 实例
 const app = express();
@@ -12,6 +13,14 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth");
 
 connectDB();
+
+// 使用 cors 中间件
+app.use(
+  cors({
+    origin: "http://localhost:3000", // 替换为你的前端地址
+    credentials: true, // 允许发送 Cookie
+  })
+);
 
 // 设置根路由
 app.get("/", (req, res) => {

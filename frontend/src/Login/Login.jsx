@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const location = useLocation();
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Check the query parameter to determine if it's login or register mode
@@ -19,10 +20,17 @@ const Login = () => {
     e.preventDefault();
     const url = isRegister ? "/api/auth/register" : "/api/auth/login";
     try {
-      const response = await axios.post(url, { email, password });
+      const response = await axios.post(
+        url,
+        { email, password },
+        { withCredentials: true }
+      );
       alert(response.data);
+      console.log("Response:", response);
+      navigate("/profile");
     } catch (error) {
       alert(error.response?.data || "An error occurred");
+      console.error("Error:", error);
     }
   };
 
