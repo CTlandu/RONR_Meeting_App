@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './DiscussionPage.css';
 import microphoneIcon from './microphone-solid.svg';
 import videoIcon from './video-solid.svg';
 
 function DiscussionPage() {
+    const [messages, setMessages] = useState([]);
+
+    /*const handleMakeMotion = () => {
+        setMessages((prevMessages) => [
+            ...prevMessages,
+            { type: 'green', text: 'user5308 raised a MOTION #001!' },
+        ]);
+    };*/
+    const handleMessage = (type, text, isChairMessage = false) => {
+        setMessages((prevMessages) => [
+            ...prevMessages,
+            { type, text, isChairMessage },
+        ]);
+    };
+
     return (
         <div className="main-container">
             <header>
@@ -31,11 +46,15 @@ function DiscussionPage() {
                         <div className="board-title">flow board</div>
                         <div className="board">
                             <div className="messages">
-                                <div className="message green">user5308 raised a MOTION #001!</div>
-                                <div className="message red">user9109 debates the MOTION #001!</div>
-                                <div className="message yellow">Vote on MOTION #001!</div>
-                                {[...Array(15)].map((_, index) => (
-                                    <div key={index} className="message red">user9109 debates the MOTION #001!</div>
+                                {messages.map((message, index) => (
+                                    <div
+                                    key={index}
+                                    className={`message ${message.type} ${
+                                        message.isChairMessage ? 'chair-message' : 'member-message'
+                                    }`}
+                                    >
+                                    {message.text}
+                                    </div>
                                 ))}
                                 <div className="last-child"></div>
                             </div>
@@ -55,6 +74,7 @@ function DiscussionPage() {
                     ))}
                 </div>
             </div>
+        
 
             <div className="toolkit-container">
                 <div className="toolkit">
@@ -64,19 +84,19 @@ function DiscussionPage() {
                     </div>
 
                     <div className="member-buttons">
-                        <button>Raise a Point of Order</button>
-                        <button>Second a Motion</button>
-                        <button>Make a Motion</button>
-                        <button>Request to Speak</button>
+                        <button onClick={() => handleMessage('yellow', 'user0827 raised a Point of Order!',false)}>Raise a Point of Order</button>
+                        <button onClick={() => handleMessage('red', 'user0827 Second MOTION #001!',false)}>Second a Motion</button>
+                        <button onClick={() => handleMessage('green', 'user5308 raised MOTION #001!',false)}> Make a Motion</button>
+                        <button onClick={() => handleMessage('blue', 'user0827 request to speak',false)}>Request to Speak</button>
                         <button>Exit the Meeting</button>
                     </div>
 
                     <div className="chair-buttons">
-                        <button>Announce Motion</button>
-                        <button>Grant the Floor</button>
-                        <button>Resolve Point of Order</button>
-                        <button>Initiate Voting</button>
-                        <button>Conclude the Meeting</button>
+                        <button onClick={() => handleMessage('#fff', 'The chair announced MOTION #001!',true)}>Announce Motion</button>
+                        <button onClick={() => handleMessage('#fff', 'The chair granted user0827 the floor',true)}>Grant the Floor</button>
+                        <button onClick={() => handleMessage('#fff', 'The chair resolved Point of Order!',true)}>Resolve Point of Order</button>
+                        <button onClick={() => handleMessage('#fff', 'The chair initiate voting!',true)}>Initiate Voting</button>
+                        <button onClick={() => handleMessage('#fff', 'Meeting ends.',true)}>Conclude the Meeting</button>
                     </div>
                 </div>
             </div>

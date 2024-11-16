@@ -26,6 +26,8 @@ header {
 .red { background-color: #e57373; }
 .yellow { background-color: #fbc02d; }
 .green { background-color: #81c784; }
+.blue { background-color:cornflowerblue;}
+.grey { background-color: gray;}
 
 .portrait{
     background-color: blueviolet;
@@ -103,8 +105,8 @@ header {
     padding: 16px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 80%;
+    align-items: center;
 }
 
 .board-title{
@@ -143,6 +145,11 @@ header {
     border-radius: 4px;
     font-weight: bold;
     color: #fff;
+    font-size: 12px;
+}
+
+.message.chair-message {
+    color: dimgrey;
 }
 
 .last-child{
@@ -176,12 +183,11 @@ header {
 
 .member-buttons{
     gap: 10px;
-//display: none;
 }
 
 .chair-buttons{
-    gap: 10px;
-    display: none;
+    gap: 10px;    
+    /*display: none;*/
 }
 
 button {
