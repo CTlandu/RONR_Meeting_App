@@ -20,7 +20,9 @@ const ChooseRole = () => {
     <div className="bg-gray-100 flex items-center justify-center h-screen">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         {/* Page Header */}
-        <h1 className="text-3xl font-bold text-center mb-6">Choose Your Role</h1>
+        <h1 className="text-3xl font-bold text-center mb-6">
+          Choose Your Role
+        </h1>
         {/* Buttons */}
         <div className="space-y-4">
           <button
