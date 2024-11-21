@@ -9,6 +9,7 @@ import CreateMeeting from "./CreateMeeting/CreateMeeting";
 import ChooseRole from "./choose_role/choose_role";
 import AboutUs from "./AboutUs/AboutUs";
 import ProtectedRoute from "./Components/ProtectedRoute";
+import DiscussionPage from "./discussionpage/DiscussionPage"
 import MeetingHistory from "./MeetingHistory/MeetingHistory";
 
 function Navbar() {
@@ -88,6 +89,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/prelogin" element={<Webhomepage />} />
         <Route path="/about" element={<AboutUs />} />
+        <Route path="/discussion" element={<DiscussionPage />} />
         <Route
           path="/profile"
           element={
