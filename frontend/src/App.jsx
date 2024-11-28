@@ -9,7 +9,7 @@ import CreateMeeting from "./CreateMeeting/CreateMeeting";
 import ChooseRole from "./choose_role/choose_role";
 import AboutUs from "./AboutUs/AboutUs";
 import ProtectedRoute from "./Components/ProtectedRoute";
-import DiscussionPage from "./discussionpage/DiscussionPage"
+import DiscussionPage from "./discussionpage/DiscussionPage";
 import MeetingHistory from "./MeetingHistory/MeetingHistory";
 
 function Navbar() {
@@ -56,6 +56,14 @@ function Navbar() {
               className="text-white hover:text-yellow-300 transition duration-300 px-4 py-2 rounded-full shadow-md"
             >
               Choose Role
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/discussion"
+              className="text-white hover:text-yellow-300 transition duration-300 px-4 py-2 rounded-full shadow-md"
+            >
+              Meeting Page
             </Link>
           </li>
           <li>
