@@ -241,11 +241,11 @@ function DiscussionPage() {
                 </div>
             )}
 
-            <div className="results">
-              <h3>Current Results:</h3>
-              <p>Option 1: {votes.option1}</p>
-              <p>Option 2: {votes.option2}</p>
-            </div>
+            {/*<div className="results">*/}
+            {/*  <h3>Current Results:</h3>*/}
+            {/*  <p>Option 1: {votes.option1}</p>*/}
+            {/*  <p>Option 2: {votes.option2}</p>*/}
+            {/*</div>*/}
             <button
               onClick={() => handleMessage("#fff", "Meeting ends.", true)}
               className="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
