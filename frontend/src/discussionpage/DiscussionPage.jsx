@@ -5,8 +5,10 @@ import socket from "./socket-manage"; // 单例 socket 实例
 import "./DiscussionPage.css";
 import microphoneIcon from "./microphone-solid.svg";
 import videoIcon from "./video-solid.svg";
+import { useNavigate } from "react-router-dom";
 
 function DiscussionPage() {
+  const navigate = useNavigate();
   const location = useLocation();
   const { meetingNumber, username } = location.state || {}; // 从路由中获取会议号和用户名
 
@@ -22,10 +24,14 @@ function DiscussionPage() {
     ]);
   };
 
+  const handleExitMeeting = () => {
+    socket.disconnect();
+    navigate("/");
+  };
+
   useEffect(() => {
     socket.connect();
     
-
     if (!meetingNumber || !username) {
       alert("Invalid meeting details!");
       return;
@@ -159,6 +165,12 @@ function DiscussionPage() {
               className="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
             >
               Second Motion
+            </button>
+            <button
+              onClick={handleExitMeeting}
+              className="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
+            >
+              Exit Meeting
             </button>
           </div>
         </div>

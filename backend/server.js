@@ -68,6 +68,27 @@ io.on("connection", (socket) => {
     }
   });
 
+  // 监听用户离开房间
+  socket.on("leaveRoom", (callback) => {
+    const { roomId } = userConnections[userID]; // 获取用户所在房间
+    if (!roomId) {
+      return callback({ success: false, message: "User is not in any room" });
+    }
+    const { username } = userConnections[userID];
+    // 从房间中移除用户
+    delete rooms[roomId][userID];
+    delete userConnections[userID];
+  
+    // 通知其他用户该用户离开
+    socket.to(roomId).emit("userLeft", { username, userID });
+  
+    console.log(`User ${username} left room ${roomId}`);
+
+    console.log("房间信息: ", rooms[roomId])
+    console.log("用户连接信息: ", userConnections)
+    callback({ success: true });
+  });
+
   // 监听用户断开连接
   socket.on("disconnect", () => {
     const { roomId } = userConnections[userID];
