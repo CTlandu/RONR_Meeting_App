@@ -12,4 +12,12 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    assetsDir: "assets",
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
 });
