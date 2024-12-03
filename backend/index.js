@@ -11,8 +11,8 @@ connectDB();
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // 替换为你的前端地址
-    credentials: true, // 允许发送 Cookie
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    credentials: true,
   })
 );
 app.use(express.json());
@@ -30,7 +30,7 @@ const server = http.createServer(app);
 require("./server")(server);
 
 // 启动 HTTP 服务
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
