@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-// import { io } from "socket.io-client";
 import socket from "./socket-manage"; // 单例 socket 实例
 import "./DiscussionPage.css";
 import microphoneIcon from "./microphone-solid.svg";
 import videoIcon from "./video-solid.svg";
 import { useNavigate } from "react-router-dom";
+import RaiseMotionButton from "./raise-motion";
+import MotionPendingPop from "./pendingMotionPop";
+import MotionApprovedPop from "./motionApprovedPop";
+import MotionDeniedPop from "./motionDeniedPop";
+import MotionDiscardedPop from "./motionDiscardedPop";
+import MotionActivatedPop from "./motionActivatedPop";
 
 function DiscussionPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { meetingNumber, username } = location.state || {}; // 从路由中获取会议号和用户名
+  const { roomId, username } = location.state || {}; // 从路由中获取会议号和用户名
 
   const [messages, setMessages] = useState([]); // 聊天消息
   const [members, setMembers] = useState([]); // 房间成员
@@ -24,6 +29,7 @@ function DiscussionPage() {
     ]);
   };
 
+  // 退出会议
   const handleExitMeeting = () => {
     socket.disconnect();
     navigate("/");
@@ -32,20 +38,21 @@ function DiscussionPage() {
   useEffect(() => {
     socket.connect();
     
-    if (!meetingNumber || !username) {
+    if (!roomId || !username) {
       alert("Invalid meeting details!");
       return;
     }
 
     // 向服务器发送加入房间的请求
-    socket.emit("joinRoom", { username, roomId: meetingNumber });
+    socket.emit("joinRoom", { username, roomId: roomId });
 
     // 监听房间成员列表更新
     socket.on("roomInfo", (data) => {
         setMembers(
           data.members.map((member) => ({
-            id: member.userID, // 转换 userID 为 id
+            userID: member.userID,
             username: member.username,
+            role: member.role
           }))
         );
         handleMessage(
@@ -60,7 +67,7 @@ function DiscussionPage() {
     socket.on("userJoined", (data) => {
         setMembers((prevMembers) => [
           ...prevMembers,
-          { id: data.userID, username: data.username }, // 转换 userID 为 id
+          { userID: data.userID, username: data.username, role: data.role },
         ]);
         handleMessage("system", `${data.username} joined the room.`);
       });
@@ -68,10 +75,14 @@ function DiscussionPage() {
     // 监听用户离开
     socket.on("userLeft", (data) => {
         setMembers((prevMembers) =>
-          prevMembers.filter((member) => member.id !== data.userID) // 转换 userID 为 id
+          prevMembers.filter((member) => member.userID !== data.userID)
         );
         handleMessage("system", `${data.username} left the room.`);
       });
+
+    socket.on("messageSend", (data) => {
+      handleMessage("system", data.message);
+    });
 
     return () => {
       // 清理 Socket 监听器
@@ -79,7 +90,7 @@ function DiscussionPage() {
       socket.off("userJoined");
       socket.off("userLeft");
     };
-  }, [meetingNumber, username]);
+  }, [roomId, username]);
 
   return (
     <div className="main-container bg-gray-100 min-h-screen p-4 flex flex-col">
@@ -89,12 +100,17 @@ function DiscussionPage() {
           <div className="username font-bold text-lg">{username}</div>
         </div>
         <div className="meeting-title text-xl font-bold">
-          Room: {meetingNumber}
+          Room: {roomId}
         </div>
         <div className="time text-sm">Time: 12:00 PM</div>
       </header>
 
       <div className="flex flex-1">
+      <MotionPendingPop roomId={roomId} /> {/* 渲染 motion 弹窗给chair来approve */}
+      <MotionApprovedPop roomId={roomId} /> {/* 渲染 motion approved 弹窗给所有用户 */}
+      <MotionDeniedPop /> {/* 渲染 motion denied 弹窗给motion发起者 */}
+      <MotionDiscardedPop /> {/* 渲染 motion discarded 弹窗给所有人 */}
+      <MotionActivatedPop /> {/* 渲染 motion activated 弹窗给所有人 */}
         <div className="content flex flex-col space-y-4 w-2/3">
           <div className="horizontal-seats grid grid-cols-2 gap-4">
             {members.map((member, index) => (
@@ -103,6 +119,9 @@ function DiscussionPage() {
                 className="h-seat w-32 h-32 bg-blue-300 rounded-lg shadow-md flex items-center justify-center"
               >
                 <div className="text-white font-bold">{member.username}</div>
+                {member.role === "chair" && (
+                  <span className="chair-badge">Chair</span>
+                )}
               </div>
             ))}
           </div>
@@ -150,6 +169,9 @@ function DiscussionPage() {
 
           {/* Buttons */}
           <div className="buttons flex flex-wrap justify-center gap-4">
+          <div className="motion-container">
+            <RaiseMotionButton roomId={roomId} username={username}/>
+          </div>
             <button
               onClick={() =>
                 handleMessage("yellow", `${username} raised a Point of Order!`)

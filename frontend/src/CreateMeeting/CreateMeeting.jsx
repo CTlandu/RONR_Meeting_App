@@ -9,11 +9,8 @@ const CreateMeeting = () => {
   // 处理加入会议逻辑
   const handleJoinMeeting = () => {
     if (meetingNumber && username) {
-      // 通过 Socket.IO 发送加入请求
-      // socket.emit("joinRoom", { username, roomId: meetingNumber }); 
-
       // 跳转到会议室页面，并传递会议号和用户名
-      navigate(`/discussion`, { state: { meetingNumber, username } });
+      navigate(`/discussion`, { state: { roomId: meetingNumber, username } });
     } else {
       alert("Please enter a username and meeting number!");
     }

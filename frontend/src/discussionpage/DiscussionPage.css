@@ -203,3 +203,15 @@ button {
 button:hover {
     background-color: #f0f4f8;
 }
+
+.chair-badge {
+    margin-top: 4px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    background-color: #f39c12;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  
