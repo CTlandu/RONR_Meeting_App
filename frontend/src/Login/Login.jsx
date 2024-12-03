@@ -25,12 +25,17 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
-      alert(response.data);
-      console.log("Response:", response);
-      navigate("/profile");
+      console.log("Login response:", response);
+      console.log("Cookies after login:", document.cookie);
+
+      if (response.data.message === "Logged in successfully") {
+        navigate("/profile");
+      } else {
+        alert(response.data.message);
+      }
     } catch (error) {
-      alert(error.response?.data || "An error occurred");
-      console.error("Error:", error);
+      console.error("Login error:", error.response?.data || error);
+      alert(error.response?.data?.message || "An error occurred");
     }
   };
 

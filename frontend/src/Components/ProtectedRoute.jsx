@@ -7,21 +7,29 @@ const ProtectedRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("/api/auth/check-auth", { withCredentials: true })
-      .then((response) => {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get("/api/auth/check-auth");
+        console.log("Auth check response:", response); // 调试用
         setIsAuthenticated(true);
-      })
-      .catch((error) => {
-        console.error("Not authenticated:", error.response.data);
-      })
-      .finally(() => {
+      } catch (error) {
+        console.log("Full error object:", error); // 调试用
+        console.error("Authentication error:", {
+          status: error.response?.status,
+          message: error.response?.data?.message,
+          cookies: document.cookie, // 调试用，检查cookie
+        });
+        setIsAuthenticated(false);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    checkAuth();
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // 或者一个加载指示器
+    return <div>Loading...</div>;
   }
 
   return isAuthenticated ? children : <Navigate to="/login" />;
