@@ -27,7 +27,7 @@ header {
 .yellow { background-color: #fbc02d; }
 .green { background-color: #81c784; }
 .blue { background-color:cornflowerblue;}
-.grey { background-color: gray;}
+.grey { background-color: #808080;}
 
 .portrait{
     background-color: blueviolet;
@@ -204,6 +204,7 @@ button:hover {
     background-color: #f0f4f8;
 }
 
+
 .chair-badge {
     margin-top: 4px;
     padding: 2px 8px;
@@ -214,4 +215,50 @@ button:hover {
     border-radius: 4px;
     text-transform: uppercase;
   }
-  
+
+.vote-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    width: 100px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.close-vote {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.submit-button {
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vote-panel {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.vote-panel button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.countdown {
+    font-size: 12px;
+}
