@@ -13,12 +13,10 @@ import MotionDiscardedPop from "./motionDiscardedPop";
 import MotionActivatedPop from "./motionActivatedPop";
 
 function DiscussionPage() {
-  
   const navigate = useNavigate();
   const location = useLocation();
   const { roomId, username } = location.state || {}; // 从路由中获取会议号和用户名
 
-  const [messages, setMessages] = useState([]);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   //const [isTimeUp, setIsTimeUp] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
@@ -48,7 +46,6 @@ function DiscussionPage() {
   const [messages, setMessages] = useState([]); // 聊天消息
   const [members, setMembers] = useState([]); // 房间成员
 
-
   // 更新消息列表
   const handleMessage = (type, text, isChairMessage = false) => {
     setMessages((prevMessages) => [
@@ -65,7 +62,7 @@ function DiscussionPage() {
 
   useEffect(() => {
     socket.connect();
-    
+
     if (!roomId || !username) {
       alert("Invalid meeting details!");
       return;
@@ -76,37 +73,37 @@ function DiscussionPage() {
 
     // 监听房间成员列表更新
     socket.on("roomInfo", (data) => {
-        setMembers(
-          data.members.map((member) => ({
-            userID: member.userID,
-            username: member.username,
-            role: member.role
-          }))
-        );
-        handleMessage(
-          "system",
-          `You joined room ${data.roomId}. Members: ${data.members
-            .map((member) => member.username)
-            .join(", ")}`
-        );
-      });
+      setMembers(
+        data.members.map((member) => ({
+          userID: member.userID,
+          username: member.username,
+          role: member.role,
+        }))
+      );
+      handleMessage(
+        "system",
+        `You joined room ${data.roomId}. Members: ${data.members
+          .map((member) => member.username)
+          .join(", ")}`
+      );
+    });
 
     // 监听其他用户加入
     socket.on("userJoined", (data) => {
-        setMembers((prevMembers) => [
-          ...prevMembers,
-          { userID: data.userID, username: data.username, role: data.role },
-        ]);
-        handleMessage("system", `${data.username} joined the room.`);
-      });
+      setMembers((prevMembers) => [
+        ...prevMembers,
+        { userID: data.userID, username: data.username, role: data.role },
+      ]);
+      handleMessage("system", `${data.username} joined the room.`);
+    });
 
     // 监听用户离开
     socket.on("userLeft", (data) => {
-        setMembers((prevMembers) =>
-          prevMembers.filter((member) => member.userID !== data.userID)
-        );
-        handleMessage("system", `${data.username} left the room.`);
-      });
+      setMembers((prevMembers) =>
+        prevMembers.filter((member) => member.userID !== data.userID)
+      );
+      handleMessage("system", `${data.username} left the room.`);
+    });
 
     socket.on("messageSend", (data) => {
       handleMessage("system", data.message);
@@ -121,22 +118,22 @@ function DiscussionPage() {
   }, [roomId, username]);
 
   const handleVote = (option) => {
-    if(option=="option1"){
-      setIsAgreed(true)
-      setButton1Color("#808080")
-      setButton2Color("#007bff")
-    }else if(option=="option2"){
-      setIsAgreed(false)
-      setButton1Color("#007bff")
-      setButton2Color("#808080")
+    if (option == "option1") {
+      setIsAgreed(true);
+      setButton1Color("#808080");
+      setButton2Color("#007bff");
+    } else if (option == "option2") {
+      setIsAgreed(false);
+      setButton1Color("#007bff");
+      setButton2Color("#808080");
     }
-    setIsDecisionMade(true)
+    setIsDecisionMade(true);
   };
 
   const submitVote = (option) => {
     const updatedVotes = { ...votes, [option]: votes[option] + 1 };
     setVotes(updatedVotes);
-  }
+  };
 
   return (
     <div className="main-container bg-gray-100 min-h-screen p-4 flex flex-col">
@@ -145,18 +142,18 @@ function DiscussionPage() {
           <span className="portrait w-12 h-12 bg-gray-500 rounded-full mr-4"></span>
           <div className="username font-bold text-lg">{username}</div>
         </div>
-        <div className="meeting-title text-xl font-bold">
-          Room: {roomId}
-        </div>
+        <div className="meeting-title text-xl font-bold">Room: {roomId}</div>
         <div className="time text-sm">Time: 12:00 PM</div>
       </header>
 
       <div className="flex flex-1">
-      <MotionPendingPop roomId={roomId} /> {/* 渲染 motion 弹窗给chair来approve */}
-      <MotionApprovedPop roomId={roomId} /> {/* 渲染 motion approved 弹窗给所有用户 */}
-      <MotionDeniedPop /> {/* 渲染 motion denied 弹窗给motion发起者 */}
-      <MotionDiscardedPop /> {/* 渲染 motion discarded 弹窗给所有人 */}
-      <MotionActivatedPop /> {/* 渲染 motion activated 弹窗给所有人 */}
+        <MotionPendingPop roomId={roomId} />{" "}
+        {/* 渲染 motion 弹窗给chair来approve */}
+        <MotionApprovedPop roomId={roomId} />{" "}
+        {/* 渲染 motion approved 弹窗给所有用户 */}
+        <MotionDeniedPop /> {/* 渲染 motion denied 弹窗给motion发起者 */}
+        <MotionDiscardedPop /> {/* 渲染 motion discarded 弹窗给所有人 */}
+        <MotionActivatedPop /> {/* 渲染 motion activated 弹窗给所有人 */}
         <div className="content flex flex-col space-y-4 w-2/3">
           <div className="horizontal-seats grid grid-cols-2 gap-4">
             {members.map((member, index) => (
@@ -172,7 +169,6 @@ function DiscussionPage() {
             ))}
           </div>
         </div>
-
         <div className="flow-board flex-1 bg-white p-4 ml-4 rounded-lg shadow-md">
           <div className="board-title font-bold text-xl mb-4">Flow Board</div>
           <div className="board h-64 overflow-y-auto p-2 bg-gray-50 rounded-md border border-gray-300">
@@ -215,13 +211,12 @@ function DiscussionPage() {
 
           {/* Buttons */}
           <div className="buttons flex flex-wrap justify-center gap-4">
-          <div className="motion-container">
-            <RaiseMotionButton roomId={roomId} username={username}/>
-          </div>
+            <div className="motion-container">
+              <RaiseMotionButton roomId={roomId} username={username} />
+            </div>
             <button
               onClick={() =>
                 handleMessage("yellow", `${username} raised a Point of Order!`)
-
               }
               className="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
             >
@@ -253,7 +248,11 @@ function DiscussionPage() {
             </button>
             <button
               onClick={() =>
-                handleMessage("#fff", "The chair granted user0827 the floor", true)
+                handleMessage(
+                  "#fff",
+                  "The chair granted user0827 the floor",
+                  true
+                )
               }
               className="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
             >
@@ -261,7 +260,11 @@ function DiscussionPage() {
             </button>
             <button
               onClick={() =>
-                handleMessage("#fff", "The chair resolved Point of Order!", true)
+                handleMessage(
+                  "#fff",
+                  "The chair resolved Point of Order!",
+                  true
+                )
               }
               className="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
             >
@@ -269,10 +272,10 @@ function DiscussionPage() {
             </button>
             <button
               disabled={isPanelOpen}
-              onClick={() =>
-                {handleMessage("#fff", "The chair initiate voting!", true)
-                setIsPanelOpen(true)}
-              }
+              onClick={() => {
+                handleMessage("#fff", "The chair initiate voting!", true);
+                setIsPanelOpen(true);
+              }}
               className="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
             >
               Initiate Voting
@@ -280,49 +283,52 @@ function DiscussionPage() {
 
             {/*Voting Panel*/}
             {isPanelOpen && (
-                <div className="vote-panel">
-                  <h2>Vote for Motion</h2>
+              <div className="vote-panel">
+                <h2>Vote for Motion</h2>
+                <button
+                  className="vote-button"
+                  onClick={() => handleVote("option1")}
+                  style={{
+                    backgroundColor: button1Color,
+                  }}
+                  //disabled={isTimeUp}
+                >
+                  Agree
+                </button>
+                <button
+                  className="vote-button"
+                  onClick={() => handleVote("option2")}
+                  style={{
+                    backgroundColor: button2Color,
+                  }}
+                  //disabled={isTimeUp}
+                >
+                  Disagree
+                </button>
+                <div className="close-vote">
                   <button
-                      className = "vote-button"
-                      onClick={() => handleVote("option1")}
-                      style={{
-                        backgroundColor : button1Color
-                      }}
-                      //disabled={isTimeUp}
+                    className="submit-button"
+                    disabled={!isDecisionMade}
+                    style={{
+                      backgroundColor: isDecisionMade ? "white" : "grey",
+                      color: isDecisionMade ? "black" : "white",
+                    }}
+                    onClick={() => {
+                      setIsPanelOpen(false);
+                      {
+                        isDecisionMade &&
+                          submitVote(isAgreed ? "option1" : "option2");
+                      }
+                    }}
                   >
-                    Agree
+                    Submit
                   </button>
-                  <button
-                      className = "vote-button"
-                      onClick={() => handleVote("option2")}
-                      style={{
-                        backgroundColor : button2Color
-                      }}
-                      //disabled={isTimeUp}
-                  >
-                    Disagree
-                  </button>
-                  <div className="close-vote">
-                    <button
-                        className="submit-button"
-                        disabled={!isDecisionMade}
-                        style={{
-                          backgroundColor : (isDecisionMade ? "white":"grey"),
-                          color : (isDecisionMade ? "black":"white")
-                        }}
-                        onClick={() => {
-                          setIsPanelOpen(false);
-                          {(isDecisionMade) && submitVote(isAgreed ? "option1":"option2")}
-                        }}
-                    >
-                      Submit
-                    </button>
-                  </div>
-                  <div className="countdown">
-                    <h1>Countdown: {timeLeft} seconds</h1>
-                    {timeLeft === 0 && <h2>Time's up!</h2>}
-                  </div>
                 </div>
+                <div className="countdown">
+                  <h1>Countdown: {timeLeft} seconds</h1>
+                  {timeLeft === 0 && <h2>Time's up!</h2>}
+                </div>
+              </div>
             )}
 
             {/*<div className="results">*/}
