@@ -20,6 +20,8 @@ module.exports = (server) => {
   const motions = {};
   // 存储各个房间chair状态
   const chairs = {};
+  // 存储各个房间voting状态
+  const votes = {}
 
   io.on("connection", (socket) => {
     console.log("A user connected:", socket.id);
@@ -43,6 +45,7 @@ module.exports = (server) => {
         rooms[roomId] = {};
         motions[roomId] = null;
         chairs[roomId] = userID;
+        votes[roomId] = null;
       }
 
       const role = Object.keys(rooms[roomId]).length === 0 ? "chair" : "member";
@@ -159,7 +162,7 @@ module.exports = (server) => {
             motions[roomId].status = "discarded";
             io.to(roomId).emit("motionDiscarded", motions[roomId]);
             const discardMessage =
-            motions[roomId].raisedBy +
+              motions[roomId].raisedBy +
               "'s motion: " +
               motions[roomId].title +
               ", was discarded as no one seconds.";
@@ -178,7 +181,7 @@ module.exports = (server) => {
         motions[roomId].status = "denied";
         io.to(motions[roomId].raisedBySocketId).emit("motionDenied", motions[roomId]);
         const denyMessage =
-        motions[roomId].raisedBy +
+          motions[roomId].raisedBy +
           "'s motion: " +
           motions[roomId].title +
           ", was denied by the chair.";
@@ -188,6 +191,7 @@ module.exports = (server) => {
       console.log("房间motion状态", motions[roomId])
     });
 
+    // Member Second Motion
     socket.on("secondMotion", ({ roomId, motion }) => {
       motions[roomId].seconds += 1;
     });
@@ -203,6 +207,69 @@ module.exports = (server) => {
     socket.on("allowSpeak", ({ roomId, username }) => {
       io.to(roomId).emit("messageSend", { message: `${username} is allowed to speak.` });
       io.to(roomId).emit("handLowered", { username })
+    });
+
+    socket.on(
+      "StartVote",
+      ({ roomId, title, description }, callback) => {
+        if (votes[roomId]) {
+          // 如果当前房间有 vote 在处理, 拒绝新的 vote
+          return callback({
+            success: false,
+            message:
+              "There is already a vote in progress. Please wait until it is resolved.",
+          });
+        } else if (!motions[roomId] || !motions[roomId].status === "activated") {
+          return callback({
+            success: false,
+            message:
+              "No motion is in discussion, can't start a vote now.",
+          });
+        }
+
+        const vote = {
+          id: `${Date.now()}`, // vote 唯一标识符
+          title,
+          description,
+          yes: 0,
+          no: 0,
+          abstain: 0,
+          status: "pending", // 状态：pending, passed, failed, tie
+        };
+
+        votes[roomId] = vote;
+
+        // callback 通知chair 成功已创建 vote
+        callback({
+          success: true,
+          message: "Vote started successfully.",
+        });
+        io.to(roomId).emit("messageSend", { message: `Vote Started: ${title}` });
+        io.to(roomId).emit("voteStarted", votes[roomId])
+
+        // 11秒后结束投票并广播结果
+        setTimeout(() => {
+          votes[roomId].status = vote.yes > vote.no
+            ? "passed"
+            : vote.no > vote.yes
+              ? "failed"
+              : "tie";
+          io.to(roomId).emit("voteResult", votes[roomId]);
+          io.to(roomId).emit("messageSend", { message: `Vote Result of ${votes[roomId].title}: ${votes[roomId].status}` });
+          votes[roomId] = null;
+          motions[roomId] = null;
+        }, 11 * 1000);
+      }
+    );
+
+    socket.on("castVote", ({ roomId, voteChoice }) => {
+      if (voteChoice === "yes") {
+        votes[roomId].yes += 1;
+      } else if (voteChoice === "no") {
+        votes[roomId].no += 1;
+      } else {
+        votes[roomId].abstain += 1;
+      }
     });
 
     // 监听用户断开连接

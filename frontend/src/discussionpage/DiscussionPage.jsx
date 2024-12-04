@@ -9,6 +9,9 @@ import MotionApprovedPop from "./motionApprovedPop";
 import MotionDeniedPop from "./motionDeniedPop";
 import MotionDiscardedPop from "./motionDiscardedPop";
 import MotionActivatedPop from "./motionActivatedPop";
+import StartVoteButton from "./startVoteButton";
+import VoteStartedPop from "./voteStartedPop";
+import VoteResultPop from "./voteResultPop";
 
 function DiscussionPage() {
   const navigate = useNavigate();
@@ -152,6 +155,8 @@ function DiscussionPage() {
         <MotionDeniedPop /> {/* 渲染 motion denied 弹窗给motion发起者 */}
         <MotionDiscardedPop /> {/* 渲染 motion discarded 弹窗给所有人 */}
         <MotionActivatedPop /> {/* 渲染 motion activated 弹窗给所有人 */}
+        <VoteStartedPop roomId={roomId} /> {/* 渲染 投票界面 弹窗给所有人 */}
+        <VoteResultPop /> {/* 渲染 vote result 弹窗给所有人 */}
         <div className="content flex flex-col space-y-4 w-2/3">
           <div className="horizontal-seats grid grid-cols-2 gap-4">
             {Object.entries(members).map(([memberName, memberInfo]) => (
@@ -205,15 +210,24 @@ function DiscussionPage() {
         <div className="toolkit flex justify-between items-center p-4 bg-white rounded-lg shadow-md">
           {/* Buttons */}
           <div className="buttons flex flex-wrap justify-center gap-4">
-            <div className="motion-container">
-              <RaiseMotionButton roomId={roomId} username={username} />
-            </div>
-            <button onClick={() => handleRaiseHand("pro")}
-              className="bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
-            >Raise Hand (Pro)</button>
-            <button onClick={() => handleRaiseHand("con")}
-              className="bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
-            >Raise Hand (Con)</button>
+            {members[username]?.role !== "chair" && (
+              <div className="motion-container">
+                <RaiseMotionButton roomId={roomId} username={username} />
+              </div>
+            )}
+            {members[username]?.role === "chair" && (
+              <StartVoteButton roomId={roomId} username={username} role="chair" />
+            )}
+            {members[username]?.role !== "chair" && (
+              <button onClick={() => handleRaiseHand("pro")}
+                className="bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
+              >Raise Hand (Pro)</button>
+            )}
+            {members[username]?.role !== "chair" && (
+              <button onClick={() => handleRaiseHand("con")}
+                className="bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
+              >Raise Hand (Con)</button>
+            )}
             <button
               onClick={handleExitMeeting}
               className="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
