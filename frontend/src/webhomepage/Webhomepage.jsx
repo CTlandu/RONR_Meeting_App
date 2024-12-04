@@ -6,7 +6,7 @@ const Webhomepage = () => {
       {/* 背景部分 */}
       <div className="bg-gradient-to-r from-blue-500 to-purple-600 relative w-full h-[55%] min-h-[400px]">
         <div className="bg-gradient-to-r from-blue-400 to-purple-400 absolute w-[85%] min-w-[800px] h-[120px] top-[10%] left-0 z-30 rounded-br-[20px] rounded-tr-[20px]">
-          <p className="text-[70px] font-bold absolute left-[5%] top-[10%] bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-300 drop-shadow-md animate-fade-in">
+          <p className="text-[70px] font-bold absolute left-[5%] top-[10%] bg-clip-text text-transparent bg-white drop-shadow-md animate-fade-in">
             EON RONR: Start Now
           </p>
         </div>
