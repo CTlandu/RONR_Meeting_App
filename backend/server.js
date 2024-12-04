@@ -72,10 +72,10 @@ module.exports = (server) => {
       // 通知当前用户房间信息
       io.to(socket.id).emit("roomInfo", {
         roomId,
-        members: Object.values(rooms[roomId]).map((user) => ({
+        members: Object.entries(rooms[roomId]).map(([userID, user]) => ({
           username: user.username,
-          userID,
-          role: userConnections[userID].role,
+          userID: userID,
+          role: user.role,
         })),
       });
 
@@ -94,28 +94,6 @@ module.exports = (server) => {
     socket.on("messageRequest", ({ roomId, message }) => {
       io.to(roomId).emit("messageSend", { message });
     });
-
-    // // Member 提交 Motion
-    // socket.on("raiseMotion", ({ roomId, title, description, username }) => {
-    //   const motion = {
-    //     id: `${Date.now()}`, // Motion 唯一标识符
-    //     title,
-    //     description,
-    //     raisedBy: username,
-    //     raisedBySocketId: socket.id,
-    //     status: "pending", // 状态：pending、approved、denied、activated、discarded
-    //     seconds: 0, // Second 的成员数
-    //   };
-
-    //   motions[roomId] = motion;
-
-    //   // 通知 Chair 审批
-    //   // const chair = Object.values(rooms[roomId]).find((user) => user.role === "chair");
-    //   const chair = userConnections[chairs[roomId]]
-    //   if (chair) {
-    //     io.to(chair.socketID).emit("newPendingMotion", motion);
-    //   }
-    // });
 
     // Member 提交 Motion
     socket.on(
@@ -148,14 +126,14 @@ module.exports = (server) => {
           io.to(chair.socketID).emit("newPendingMotion", motion);
         }
 
-        // 成功创建 motion
+        // 通知发起人成功创建 motion
         callback({
           success: true,
           message: "Motion raised successfully. Waiting for chair's approval.",
         });
 
-        // 通知所有成员有人 raise motion
-        io.to(roomId).emit("messageRequest", {
+        // 通知所有成员有人  motion raised
+        io.to(roomId).emit("messageSend", {
           message: `${username} raised a motion: "${title}", waiting for chair's approval.`,
         });
       }
@@ -166,43 +144,65 @@ module.exports = (server) => {
       if (decision === "approved") {
         motions[roomId].status = "approved";
         io.sockets.adapter.rooms.get(roomId).forEach((s) => {
-          // 通知除chair外所有人motion approved
+          // 弹窗通知除chair外所有人motion approved
           if (s !== userConnections[chairs[roomId]].socketID) {
             io.sockets.sockets.get(s).emit("motionApproved", motions[roomId]);
           }
+          // 消息通知所有成员motion approved
+          io.to(roomId).emit("messageSend", {
+            message: `${motions[roomId].raisedBy}'s motion: "${motions[roomId].title}", was approved by the chair.`,
+          });
         });
         // 等待10秒后, 检查是否有人second
         setTimeout(() => {
           if (motions[roomId].seconds === 0) {
-            motion.status = "discarded";
-            io.to(roomId).emit("motionDiscarded", motion);
+            motions[roomId].status = "discarded";
+            io.to(roomId).emit("motionDiscarded", motions[roomId]);
             const discardMessage =
-              motion.raisedBy +
+            motions[roomId].raisedBy +
               "'s motion: " +
-              motion.title +
+              motions[roomId].title +
               ", was discarded as no one seconds.";
             io.to(roomId).emit("messageSend", { message: discardMessage });
             motions[roomId] = null;
           } else {
+            motions[roomId].status = "activated";
             io.to(roomId).emit("motionActivated", motions[roomId]);
+            // 消息通知所有成员motion open for discussion
+            io.to(roomId).emit("messageSend", {
+              message: `${motions[roomId].raisedBy}'s motion: "${motions[roomId].title}", is now open for discussion.`,
+            });
           }
         }, 10 * 1000);
       } else {
-        const motion = motions[roomId];
-        motion.status = "denied";
-        io.to(motion.raisedBySocketId).emit("motionDenied", motion);
+        motions[roomId].status = "denied";
+        io.to(motions[roomId].raisedBySocketId).emit("motionDenied", motions[roomId]);
         const denyMessage =
-          motion.raisedBy +
+        motions[roomId].raisedBy +
           "'s motion: " +
-          motion.title +
+          motions[roomId].title +
           ", was denied by the chair.";
         io.to(roomId).emit("messageSend", { message: denyMessage });
         motions[roomId] = null;
       }
+      console.log("房间motion状态", motions[roomId])
     });
 
     socket.on("secondMotion", ({ roomId, motion }) => {
       motions[roomId].seconds += 1;
+    });
+
+    // 用户举手
+    socket.on("raiseHand", ({ roomId, username, handType }) => {
+      // 通知房间内所有成员
+      io.to(roomId).emit("handRaised", { username, handType });
+      io.to(roomId).emit("messageSend", { message: `${username} raised hand (${handType})` });
+    });
+
+    // chair approve 发言(举手)请求
+    socket.on("allowSpeak", ({ roomId, username }) => {
+      io.to(roomId).emit("messageSend", { message: `${username} is allowed to speak.` });
+      io.to(roomId).emit("handLowered", { username })
     });
 
     // 监听用户断开连接
@@ -220,8 +220,8 @@ module.exports = (server) => {
           // 从房间中移除用户
           delete rooms[roomId][userID];
           delete userConnections[userID];
-          socket.to(roomId).emit("userLeft", { username, userID });
           console.log(`User ${userID} left room ${roomId}`);
+          // 如果退出房间的是chair, 需要指定新chair
           if (chairs[roomId] === userID) {
             // 检查房间是否还有其他用户
             const roomUsers = Object.keys(rooms[roomId]); // 获取当前房间用户列表
@@ -232,12 +232,14 @@ module.exports = (server) => {
               chairs[roomId] = newChair; // 设置新的 Chair
               userConnections[newChair].role = "chair";
               rooms[roomId][newChair].role = "chair"; // 设置新的 Chair
+              socket.to(roomId).emit("chairChange", { newChairUsername: userConnections[newChair].username });
               const newChairMessage =
                 "The chair has been changed to: " +
                 userConnections[newChair].username;
               io.to(roomId).emit("messageSend", { message: newChairMessage });
             }
           }
+          socket.to(roomId).emit("userLeft", { username, userID });  // 广播message用户离开并更新前端用户列表
           // 检查房间还有没有人
           if (!rooms[roomId] || Object.keys(rooms[roomId]).length === 0) {
             delete rooms[roomId];

@@ -27,7 +27,7 @@ header {
 .yellow { background-color: #fbc02d; }
 .green { background-color: #81c784; }
 .blue { background-color:cornflowerblue;}
-.grey { background-color: #808080;}
+.grey { background-color: gray;}
 
 .portrait{
     background-color: blueviolet;
@@ -77,12 +77,15 @@ header {
     margin: 10px 0;
 }
 
+/* 调整 h-seat 布局 */
 .h-seat {
-    width: 120px;
-    height: 80px;
-    background-color: #d3d6db;
-    border-radius: 4px;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    position: relative; /* 允许使用 absolute 定位 */
+  }
 
 .vertical-seats {
     display: grid;
@@ -204,61 +207,60 @@ button:hover {
     background-color: #f0f4f8;
 }
 
-
+/* Chair 标志 */
 .chair-badge {
     margin-top: 4px;
-    padding: 2px 8px;
+    padding: 4px 8px;
     font-size: 10px;
     font-weight: bold;
     color: white;
-    background-color: #f39c12;
+    background-color: #ff9800;
     border-radius: 4px;
     text-transform: uppercase;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   }
 
-.vote-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    width: 100px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.close-vote {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.submit-button {
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.vote-panel {
-    position: fixed;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: bold;
-}
-
-.vote-panel button {
-    margin: 10px;
-    padding: 10px 20px;
+/* 举手标志 */
+.hand-badge {
+    position: absolute;
+    top: 4px; /* 调整位置 */
+    right: 4px; /* 使标志靠右 */
     font-size: 14px;
-}
+    background-color: white;
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Pro 举手标志 */
+  .hand-badge.pro {
+    color: green;
+    border: 2px solid green;
+  }
+  
+  /* Con 举手标志 */
+  .hand-badge.con {
+    color: red;
+    border: 2px solid red;
+  }
+  
+  .hand-badge.pro {
+    color: green;
+  }
+  
+  .hand-badge.con {
+    color: red;
+  }
 
-.countdown {
-    font-size: 12px;
-}
+  /* Hover 效果 */
+.hand-badge:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .hand-badge:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  

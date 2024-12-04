@@ -43,7 +43,7 @@ function RaiseMotionButton({ roomId, username }) {
       {/* Raise Motion 按钮 */}
       <button
         onClick={() => setShowForm(true)} // 打开弹窗
-        className="bg-green-500 text-white font-bold py-2 px-4 rounded-lg"
+        className="bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
       >
         Raise Motion
       </button>
