@@ -48,10 +48,6 @@
   .modal-actions {
     text-align: center;
     margin-top: 20px;
-    /*display: flex;*/
-    /*justify-content: space-between; !* 按钮均匀分布 *!*/
-    /*align-items: center;*/
-    /*margin-top: 20px; !* 与上方内容拉开一定距离 *!*/
     }
   
   /* 按钮样式 */
@@ -61,6 +57,8 @@
     font-size: 1rem;
     font-weight: bold;
     padding: 10px 10px;
+    border-radius: 8px;
+    cursor: pointer;
     transition: all 0.3s ease-in-out;
 
     /*font-size: 1rem;*/
