@@ -46,21 +46,30 @@
   
   /* 按钮容器 */
   .modal-actions {
-    display: flex;
-      justify-content: space-between; /* 按钮均匀分布 */
-      align-items: center;
-      margin-top: 20px; /* 与上方内容拉开一定距离 */
+    text-align: center;
+    margin-top: 20px;
+    /*display: flex;*/
+    /*justify-content: space-between; !* 按钮均匀分布 *!*/
+    /*align-items: center;*/
+    /*margin-top: 20px; !* 与上方内容拉开一定距离 *!*/
     }
   
   /* 按钮样式 */
   .btn {
+    display: inline-block;
+    margin: 0 10px; /* 设置左右间隔 */
     font-size: 1rem;
     font-weight: bold;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+    padding: 10px 10px;
     transition: all 0.3s ease-in-out;
+
+    /*font-size: 1rem;*/
+    /*font-weight: bold;*/
+    /*padding: 10px 10px;*/
+    /*border: none;*/
+    /*border-radius: 8px;*/
+    /*cursor: pointer;*/
+    /*transition: all 0.3s ease-in-out;*/
   }
   
   .btn-primary {
