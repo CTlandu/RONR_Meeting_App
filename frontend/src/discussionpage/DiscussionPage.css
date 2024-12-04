@@ -72,9 +72,10 @@ header {
 
 .horizontal-seats {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 10px 0;
+    flex-wrap: wrap;  /* 允许座位自动换行 */
+    justify-content: center; /* 让内容居中对齐 */
+    gap: 10px; /* 间距 */
+    margin: 10px 0; /* 上下间距 */
 }
 
 /* 调整 h-seat 布局 */
