@@ -6,9 +6,10 @@ if (!userID) {
   localStorage.setItem("userID", userID);
 }
 
-const socket = io("http://localhost:3000", {
+const socket = io(process.env.VITE_API_URL || "http://localhost:3000", {
   autoConnect: false,
   auth: { userID },
+  withCredentials: true,
 });
 
 export default socket;
