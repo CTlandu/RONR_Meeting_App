@@ -93,17 +93,13 @@ function App() {
         <Route
           path="/profile"
           element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
+            <Profile />
           }
         />
         <Route
           path="/createmeeting"
           element={
-            <ProtectedRoute>
-              <CreateMeeting />
-            </ProtectedRoute>
+            <CreateMeeting />
           }
         />
         <Route
