@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Webhomepage = () => {
   return (
@@ -19,29 +20,29 @@ const Webhomepage = () => {
       {/* Login 和 Sign Up 按钮 */}
       <div className="flex flex-col justify-between items-center fixed bottom-0 right-0 h-[40%] w-[40%] p-8 space-y-6">
         {/* LOGIN Button */}
-        <button
-          onClick={() => (window.location.href = "/login?mode=login")}
-          className="w-full h-[45%] bg-gradient-to-br from-blue-500 to-purple-600 text-[30px] font-bold text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-100"
+        <Link
+          to="/login?mode=login"
+          className="w-full h-[45%] bg-gradient-to-br from-blue-500 to-purple-600 text-[30px] font-bold text-white rounded-lg shadow-md flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-100"
         >
           LOGIN
-        </button>
+        </Link>
         {/* SIGN UP Button */}
-        <button
-          onClick={() => (window.location.href = "/login?mode=register")}
-          className="w-full h-[45%] bg-gradient-to-br from-blue-500 to-purple-600 text-[30px] font-bold text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-100"
+        <Link
+          to="/login?mode=register"
+          className="w-full h-[45%] bg-gradient-to-br from-blue-500 to-purple-600 text-[30px] font-bold text-white rounded-lg shadow-md flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-100"
         >
           SIGN UP
-        </button>
+        </Link>
       </div>
 
       {/* About Us Section */}
       <div className="absolute left-0 bottom-10 w-[36%] bg-gradient-to-r from-blue-400 to-purple-400 h-[60px] rounded-br-[20px] rounded-tr-[20px]">
-        <a
-          href="/about"
+        <Link
+          to="/about"
           className="text-[35px] font-bold absolute right-[10%] top-[10%] text-white hover:underline"
         >
           About US
-        </a>
+        </Link>
       </div>
     </body>
   );
