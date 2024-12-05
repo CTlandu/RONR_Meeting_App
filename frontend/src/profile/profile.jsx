@@ -7,49 +7,55 @@ const Profile = () => {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <div className="w-1/4 bg-gray-800 text-gray-100 p-6 flex flex-col justify-between">
+      <div className="w-1/4 bg-gradient-to-b from-gray-800 to-gray-900 text-gray-100 p-6 flex flex-col justify-between shadow-lg">
         <div className="flex flex-col items-center">
           {/* User Profile */}
-          <div className="bg-gray-500 rounded-full h-24 w-24 mb-6"></div>
+          <div className="bg-gradient-to-r from-purple-500 to-blue-500 rounded-full h-24 w-24 mb-6 shadow-md"></div>
           {/* Username and ID */}
           <div className="w-full mb-4">
-            <div className="bg-gray-600 text-lg font-bold p-2 mb-1 text-center rounded">Username</div>
-            <div className="bg-gray-700 p-2 text-center rounded">ID</div>
+            <div className="bg-gray-700 text-lg font-bold p-2 mb-1 text-center rounded shadow-md">
+              Eon_15926
+            </div>
+            <div className="bg-gray-800 p-2 text-center rounded shadow-md">
+              dumdum51@wm.edu
+            </div>
           </div>
         </div>
         {/* Sidebar Options at Bottom */}
         <div className="mt-4">
-          <ul className="space-y-2">
-            <li className="cursor-pointer hover:text-yellow-400 transition duration-200">CHECK RONR</li>
-            <li className="cursor-pointer hover:text-yellow-400 transition duration-200">HELP</li>
+          <ul className="space-y-4">
+            <li>
+              <a
+                href="https://www.ulm.edu/staffsenate/documents/roberts-rules-of-order.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cursor-pointer hover:text-yellow-400 transition duration-300 font-semibold tracking-wide"
+              >
+                CHECK RONR
+              </a>
+            </li>
           </ul>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 bg-gray-100 flex justify-center items-center">
-        <div className="grid grid-cols-2 gap-8">
-          {/* Create a Meeting Button */}
+      <div className="flex-1 bg-gray-100 flex justify-center items-center p-10">
+        <div className="grid grid-cols-2 gap-10">
+          {/* Start a Meeting Button */}
           <button
-            onClick={() => navigate('/createmeeting', { state: { from: 'create' } })}
-            className="bg-gray-500 hover:bg-gray-600 text-white w-40 h-40 flex justify-center items-center font-bold text-lg text-center rounded-lg shadow-md transition duration-300"
+            onClick={() =>
+              navigate("/createmeeting", { state: { from: "join" } })
+            }
+            className="bg-gradient-to-br from-blue-500 to-purple-600 text-white w-48 h-48 flex justify-center items-center font-bold text-xl text-center rounded-lg shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl"
           >
-            CREATE A MEETING
+            START A MEETING
           </button>
-          {/* Join a Meeting Button */}
+          {/* Meeting History Button */}
           <button
-            onClick={() => navigate('/createmeeting', { state: { from: 'join' } })}
-            className="bg-gray-500 hover:bg-gray-600 text-white w-40 h-40 flex justify-center items-center font-bold text-lg text-center rounded-lg shadow-md transition duration-300"
+            onClick={() => navigate("/meetinghistory")}
+            className="bg-gradient-to-br from-blue-500 to-green-500 text-white w-48 h-48 flex justify-center items-center font-bold text-xl text-center rounded-lg shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl"
           >
-            JOIN A MEETING
-          </button>
-          {/* Review My Meetings Button */}
-          <button className="bg-gray-500 hover:bg-gray-600 text-white w-40 h-40 flex justify-center items-center font-bold text-lg text-center rounded-lg shadow-md transition duration-300">
             MEETING HISTORY
-          </button>
-          {/* Placeholder Button */}
-          <button className="bg-gray-400 hover:bg-gray-500 text-white w-40 h-40 flex justify-center items-center font-bold text-lg text-center rounded-lg shadow-md transition duration-300">
-            ...
           </button>
         </div>
       </div>

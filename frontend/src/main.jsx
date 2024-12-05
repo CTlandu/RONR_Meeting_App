@@ -1,11 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom/client"; // 从 react-dom/client 导入
+import ReactDOM from "react-dom";
+import axios from "axios";
 import App from "./App";
-import "./index.css";
 
-const root = ReactDOM.createRoot(document.getElementById("root")); // 获取根元素
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// 设置 axios 默认配置
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL =
+  import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+ReactDOM.render(<App />, document.getElementById("root"));

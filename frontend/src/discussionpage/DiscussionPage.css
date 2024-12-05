@@ -26,6 +26,8 @@ header {
 .red { background-color: #e57373; }
 .yellow { background-color: #fbc02d; }
 .green { background-color: #81c784; }
+.blue { background-color:cornflowerblue;}
+.grey { background-color: gray;}
 
 .portrait{
     background-color: blueviolet;
@@ -70,17 +72,21 @@ header {
 
 .horizontal-seats {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 10px 0;
+    flex-wrap: wrap;  /* 允许座位自动换行 */
+    justify-content: center; /* 让内容居中对齐 */
+    gap: 10px; /* 间距 */
+    margin: 10px 0; /* 上下间距 */
 }
 
+/* 调整 h-seat 布局 */
 .h-seat {
-    width: 120px;
-    height: 80px;
-    background-color: #d3d6db;
-    border-radius: 4px;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    position: relative; /* 允许使用 absolute 定位 */
+  }
 
 .vertical-seats {
     display: grid;
@@ -103,8 +109,8 @@ header {
     padding: 16px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 80%;
+    align-items: center;
 }
 
 .board-title{
@@ -143,6 +149,11 @@ header {
     border-radius: 4px;
     font-weight: bold;
     color: #fff;
+    font-size: 12px;
+}
+
+.message.chair-message {
+    color: dimgrey;
 }
 
 .last-child{
@@ -176,12 +187,11 @@ header {
 
 .member-buttons{
     gap: 10px;
-    //display: none;
 }
 
 .chair-buttons{
-    gap: 10px;
-    display: none;
+    gap: 10px;    
+    /*display: none;*/
 }
 
 button {
@@ -197,3 +207,61 @@ button {
 button:hover {
     background-color: #f0f4f8;
 }
+
+/* Chair 标志 */
+.chair-badge {
+    margin-top: 4px;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    background-color: #ff9800;
+    border-radius: 4px;
+    text-transform: uppercase;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+/* 举手标志 */
+.hand-badge {
+    position: absolute;
+    top: 4px; /* 调整位置 */
+    right: 4px; /* 使标志靠右 */
+    font-size: 14px;
+    background-color: white;
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Pro 举手标志 */
+  .hand-badge.pro {
+    color: green;
+    border: 2px solid green;
+  }
+  
+  /* Con 举手标志 */
+  .hand-badge.con {
+    color: red;
+    border: 2px solid red;
+  }
+  
+  .hand-badge.pro {
+    color: green;
+  }
+  
+  .hand-badge.con {
+    color: red;
+  }
+
+  /* Hover 效果 */
+.hand-badge:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .hand-badge:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  

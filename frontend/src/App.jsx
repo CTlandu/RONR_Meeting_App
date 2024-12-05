@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./index.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./Login/Login";
 import Home from "./Home";
 import Webhomepage from "./webhomepage/Webhomepage";
@@ -10,20 +10,88 @@ import CreateMeeting from "./CreateMeeting/CreateMeeting";
 import ChooseRole from "./choose_role/choose_role";
 import AboutUs from "./AboutUs/AboutUs";
 import ProtectedRoute from "./Components/ProtectedRoute";
-=======
-import Profile from "./profile/profile"
-import Review from "./Review/review";
->>>>>>> 945d6bb (a)
+import DiscussionPage from "./discussionpage/DiscussionPage";
+import MeetingHistory from "./MeetingHistory/MeetingHistory";
+
+// function Navbar() {
+//   return (
+//     <nav className="bg-blue-600 p-4 shadow-md">
+//       <div className="container mx-auto flex justify-between items-center">
+//         <div className="text-white text-2xl font-bold">EON RONR</div>
+//         <ul className="flex space-x-6">
+//           <li>
+//             <Link
+//               to="/"
+//               className="text-white hover:text-yellow-300 transition duration-300 px-4 py-2 rounded-full shadow-md"
+//             >
+//               Home
+//             </Link>
+//           </li>
+//           <li>
+//             <Link
+//               to="/about"
+//               className="text-white hover:text-yellow-300 transition duration-300 px-4 py-2 rounded-full shadow-md"
+//             >
+//               About Us
+//             </Link>
+//           </li>
+//           <li>
+//             <Link
+//               to="/profile"
+//               className="text-white hover:text-yellow-300 transition duration-300 px-4 py-2 rounded-full shadow-md"
+//             >
+//               Profile
+//             </Link>
+//           </li>
+//           <li>
+//             <Link
+//               to="/createmeeting"
+//               className="text-white hover:text-yellow-300 transition duration-300 px-4 py-2 rounded-full shadow-md"
+//             >
+//               Create Meeting
+//             </Link>
+//           </li>
+//           <li>
+//             <Link
+//               to="/discussion"
+//               className="text-white hover:text-yellow-300 transition duration-300 px-4 py-2 rounded-full shadow-md"
+//             >
+//               Meeting Page
+//             </Link>
+//           </li>
+//           <li>
+//             <Link
+//               to="/meetinghistory"
+//               className="text-white hover:text-yellow-300 transition duration-300 px-4 py-2 rounded-full shadow-md"
+//             >
+//               Meeting History
+//             </Link>
+//           </li>
+//           <li>
+//             <Link
+//               to="/login"
+//               className="text-white hover:text-yellow-300 transition duration-300 px-4 py-2 rounded-full shadow-md"
+//             >
+//               Login
+//             </Link>
+//           </li>
+//         </ul>
+//       </div>
+//     </nav>
+//   );
+// }
 
 function App() {
   return (
     <Router>
+      {/* <Navbar /> */}
       <Routes>
         <Route path="/" element={<Webhomepage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/prelogin" element={<Webhomepage />} />
 <<<<<<< HEAD
         <Route path="/about" element={<AboutUs />} />
+        <Route path="/discussion" element={<DiscussionPage />} />
         <Route
           path="/profile"
           element={
@@ -48,10 +116,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-=======
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/review" element={<Review />} />
->>>>>>> 945d6bb (a)
+        <Route
+          path="/meetinghistory"
+          element={
+            <ProtectedRoute>
+              <MeetingHistory />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

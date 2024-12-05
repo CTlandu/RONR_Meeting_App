@@ -1,37 +1,46 @@
-// 导入 express
+// index.js
 const express = require("express");
-const cors = require("cors"); // 引入 cors
-
-// 创建 express 实例
-const app = express();
-
-// 定义服务器端口
-const PORT = 3000;
-
-const connectDB = require("./dbconnect");
+const http = require("http");
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const connectDB = require("./dbconnect");
 const authRoutes = require("./routes/auth");
 
+const app = express();
 connectDB();
 
-// 使用 cors 中间件
 app.use(
   cors({
-    origin: "http://localhost:3000", // 替换为你的前端地址
-    credentials: true, // 允许发送 Cookie
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Access-Control-Allow-Credentials",
+      "Access-Control-Allow-Headers",
+    ],
   })
 );
-
-// 设置根路由
-app.get("/", (req, res) => {
-  res.send("Hello, Express!");
-});
-
-// 启动服务器，监听指定端口
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT} 服务器运行在端口${PORT}`);
-});
-
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth", authRoutes);
+
+// 添加预检请求处理
+app.options("*", cors());
+
+// 设置根路由
+app.get("/", (req, res) => {
+  res.send("Hello, Express with Socket.IO and other services!");
+});
+
+// 创建 HTTP 服务器实例
+const server = http.createServer(app);
+
+require("./server")(server);
+
+// 启动 HTTP 服务
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

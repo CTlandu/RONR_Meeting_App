@@ -10,57 +10,114 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   const { email, password } = req.body;
   try {
+    // 使用 bcrypt 加密密码
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ email, password: hashedPassword });
     await user.save();
 
     // 生成 token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    // 设置 cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
-    // 在发送响应之前设置 Cookie
-    res.cookie("token", token, { httpOnly: true, secure: false });
-    res.status(201).send("User registered 用户成功注册");
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({ message: error.message });
   }
 });
 
 // 登录
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
   try {
+    const { email, password } = req.body;
+    console.log("Login attempt:", { email }); // 不要记录密码
+
     const user = await User.findOne({ email });
-    if (!user)
-      return res.status(400).send("Invalid email，邮箱错误，找不到用户");
+    console.log("Found user:", user ? "Yes" : "No"); // 调试用
 
+    if (!user) {
+      console.log("User not found");
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // 使用 bcrypt 比较密码
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).send("Invalid password，密码错误");
+    if (!isMatch) {
+      console.log("Password mismatch");
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+    // 创建 token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    // 设置 cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      maxAge: 24 * 60 * 60 * 1000,
     });
-    res.cookie("token", token, { httpOnly: true, secure: false });
-    res.send("Logged in");
+
+    console.log("Login successful, token set"); // 调试用
+
+    res.status(200).json({
+      message: "Logged in successfully",
+      user: { email: user.email },
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error during login" });
   }
 });
 
-// 检查是否已登录
+// 检查认证状态
 router.get("/check-auth", (req, res) => {
+  console.log("Received cookies:", req.cookies); // 调试日志
   const token = req.cookies.token;
+
   if (!token) {
-    return res.status(401).send("Not authenticated");
+    console.log("No token in cookies"); // 调试日志
+    return res.status(401).json({ message: "No token found" });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    res.status(200).send("Authenticated");
+    console.log("Decoded token:", decoded); // 调试日志
+    res.status(200).json({
+      message: "Authenticated",
+      user: { email: decoded.email },
+    });
   } catch (error) {
-    res.status(401).send("Invalid token");
+    console.error("Token verification error:", error); // 调试日志
+    res.status(401).json({ message: "Invalid token" });
   }
+});
+
+// 登出路由
+router.post("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
+  });
+  res.json({ message: "Logged out successfully" });
 });
 
 module.exports = router;

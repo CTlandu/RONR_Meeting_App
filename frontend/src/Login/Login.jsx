@@ -25,21 +25,34 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
-      alert(response.data);
-      console.log("Response:", response);
-      navigate("/profile");
+      console.log("Login response:", response);
+      console.log("Cookies after login:", document.cookie);
+
+      if (response.data.message === "Logged in successfully") {
+        navigate("/profile");
+      } else {
+        alert(response.data.message);
+      }
     } catch (error) {
-      alert(error.response?.data || "An error occurred");
-      console.error("Error:", error);
+      console.error("Login error:", error.response?.data || error);
+      alert(error.response?.data?.message || "An error occurred");
     }
   };
 
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-r from-blue-400 to-blue-600">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
-        <h1 className="text-3xl font-bold mb-6 text-center text-blue-100">
+        <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">
           {isRegister ? "Register" : "Welcome Back"}
         </h1>
+        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-700">
+          <p>
+            Because the backend service is deployed as a free service, there
+            will be a cool down after not used for a while. The cold start would
+            approximately take 90 seconds so please try to login again after 90
+            seconds (but you have to first log in once to activate it).
+          </p>
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-5">
             <label
