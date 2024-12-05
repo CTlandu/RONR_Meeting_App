@@ -7,12 +7,14 @@ function VoteStartedPop({ roomId }) {
     const [votedCount, setVotedCount] = useState(0); // 已投票人数
     const [countdown, setCountdown] = useState(10); // 倒计时时间（单位：秒）
     const [hasVoted, setHasVoted] = useState(false); // 用户是否已投票
+    const [isChair, setIsChair] = useState(false); // 是否是 chair
 
     useEffect(() => {
         // 监听服务器广播的投票信息
-        socket.on("voteStarted", (voteData) => {
+        socket.on("voteStarted", (voteData, chair = false) => {
             setVote(voteData); // 显示投票弹窗
             setVotedCount(0); // 重置已投票人数
+            setIsChair(chair); // 保存 chair 信息
             setCountdown(10); // 重置倒计时
             setHasVoted(false); // 重置投票状态
         });
@@ -20,7 +22,7 @@ function VoteStartedPop({ roomId }) {
         // 监听投票更新事件
         socket.on("voteUpdated", (voteData) => {
             if (voteData.voteId === vote?.voteId) {
-                setVotedCount(voteData.votedCount); // 更新已投票人数
+                setVotedCount(voteData.yes + voteData.no + voteData.abstain); // 更新已投票人数
             }
         });
 
@@ -44,8 +46,8 @@ function VoteStartedPop({ roomId }) {
     // 在倒计时结束时关闭弹窗
     useEffect(() => {
         if (countdown === 0) {
-            if (!hasVoted) {
-                socket.emit("castVote", { roomId, voteChoice: "abstain" }); // 投弃票
+            if (!hasVoted && !isChair) {
+                socket.emit("castVote", { roomId, voteChoice: "abstain" }); // 除chair外自动投弃票
             }
             setVote(null); // 倒计时结束后关闭弹窗
         }
@@ -70,7 +72,11 @@ function VoteStartedPop({ roomId }) {
                     <strong>Voted:</strong> {votedCount}
                 </p>
                 <div className="modal-actions">
-                    {!hasVoted ? ( // 显示投票按钮
+                    {isChair ? ( // 如果是chair，显示禁止投票提示
+                        <p className="text-warning">
+                            You can't vote as the chair. The vote ends in ({countdown}s).
+                        </p>
+                    ) : !hasVoted ? ( // 非chair用户显示投票按钮
                         <>
                             <button
                                 onClick={() => handleVote("yes")}
@@ -92,7 +98,7 @@ function VoteStartedPop({ roomId }) {
                             </button>
                         </>
                     ) : (
-                        // 显示提示文字并显示倒计时
+                        // 用户已投票时显示
                         <p className="text-success">
                             Your choice has been recorded. The window will close after the timer ends ({countdown}s).
                         </p>

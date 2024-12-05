@@ -12,6 +12,7 @@ import MotionActivatedPop from "./motionActivatedPop";
 import StartVoteButton from "./startVoteButton";
 import VoteStartedPop from "./voteStartedPop";
 import VoteResultPop from "./voteResultPop";
+import DismissMeetingButton from "./dismissMeetingButton";
 
 function DiscussionPage() {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ function DiscussionPage() {
   // 退出会议
   const handleExitMeeting = () => {
     socket.disconnect();
-    navigate("/");
+    navigate("/profile");
   };
 
   useEffect(() => {
@@ -128,6 +129,11 @@ function DiscussionPage() {
       });
     });
 
+    // chair dismiss meeting
+    socket.on("meetingDismissed", () => {
+      handleExitMeeting();
+    });
+
     return () => {
       // 清理 Socket 监听器
       socket.off("roomInfo");
@@ -146,7 +152,6 @@ function DiscussionPage() {
         <div className="meeting-title text-xl font-bold">
           Room: {roomId}
         </div>
-        <div className="time text-sm">Time: 12:00 PM</div>
       </header>
 
       <div className="flex flex-1">
@@ -217,6 +222,9 @@ function DiscussionPage() {
             )}
             {members[username]?.role === "chair" && (
               <StartVoteButton roomId={roomId} username={username} role="chair" />
+            )}
+            {members[username]?.role === "chair" && (
+              <DismissMeetingButton roomId={roomId} />
             )}
             {members[username]?.role !== "chair" && (
               <button onClick={() => handleRaiseHand("pro")}
