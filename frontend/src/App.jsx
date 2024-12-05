@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./Login/Login";
 import Home from "./Home";
 import Webhomepage from "./webhomepage/Webhomepage";
-<<<<<<< HEAD
 import Profile from "./profile/profile";
 import CreateMeeting from "./CreateMeeting/CreateMeeting";
 import ChooseRole from "./choose_role/choose_role";
@@ -89,7 +88,6 @@ function App() {
         <Route path="/" element={<Webhomepage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/prelogin" element={<Webhomepage />} />
-<<<<<<< HEAD
         <Route path="/about" element={<AboutUs />} />
         <Route path="/discussion" element={<DiscussionPage />} />
         <Route
