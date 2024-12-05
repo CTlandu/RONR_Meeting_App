@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const MeetingHistory = () => {
   const meetings = [
@@ -23,10 +24,20 @@ const MeetingHistory = () => {
               key={meeting.id}
               className="flex justify-between items-center p-4 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-200"
             >
-              <span className="font-semibold text-lg text-gray-700">Meeting ID: {meeting.id}</span>
+              <span className="font-semibold text-lg text-gray-700">
+                Meeting ID: {meeting.id}
+              </span>
               <span className="text-gray-600">Date: {meeting.date}</span>
             </div>
           ))}
+        </div>
+        <div className="absolute bottom-1 left-10">
+          <Link
+            to="/profile"
+            className="text-blue-600 font-bold hover:underline flex items-center space-x-2"
+          >
+            <span>&larr;</span> <span>Back to Profile</span>
+          </Link>
         </div>
       </div>
     </div>

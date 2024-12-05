@@ -14,10 +14,10 @@ const Profile = () => {
           {/* Username and ID */}
           <div className="w-full mb-4">
             <div className="bg-gray-700 text-lg font-bold p-2 mb-1 text-center rounded shadow-md">
-              Username
+              Eon_15926
             </div>
             <div className="bg-gray-800 p-2 text-center rounded shadow-md">
-              ID
+              dumdum51@wm.edu
             </div>
           </div>
         </div>

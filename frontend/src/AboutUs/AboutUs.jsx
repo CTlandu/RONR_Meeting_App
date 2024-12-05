@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const AboutUs = () => {
   return (
@@ -52,12 +53,12 @@ const AboutUs = () => {
 
         {/* 底部链接 */}
         <div className="absolute bottom-1 left-10">
-          <a
-            href="/prelogin"
+          <Link
+            to="/prelogin"
             className="text-blue-600 font-bold hover:underline flex items-center space-x-2"
           >
             <span>&larr;</span> <span>Back to Home Page</span>
-          </a>
+          </Link>
         </div>
       </div>
     </div>
