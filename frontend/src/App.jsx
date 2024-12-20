@@ -11,6 +11,7 @@ import AboutUs from "./AboutUs/AboutUs";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import DiscussionPage from "./discussionpage/DiscussionPage";
 import MeetingHistory from "./MeetingHistory/MeetingHistory";
+import Review from "./Review/review";
 
 // function Navbar() {
 //   return (
@@ -119,6 +120,14 @@ function App() {
           element={
             <ProtectedRoute>
               <MeetingHistory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/review"
+          element={
+            <ProtectedRoute>
+              <Review />
             </ProtectedRoute>
           }
         />
