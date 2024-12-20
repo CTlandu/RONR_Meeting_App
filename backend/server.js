@@ -245,7 +245,8 @@ module.exports = (server) => {
           message: "Vote started successfully.",
         });
         io.to(roomId).emit("messageSend", { message: `Vote Started: ${title}` });
-        io.to(roomId).emit("voteStarted", votes[roomId])
+        socket.to(roomId).emit("voteStarted", votes[roomId]);
+        io.to(socket.id).emit("voteStarted", votes[roomId], true);   // 广播给chair投票开始
 
         // 11秒后结束投票并广播结果
         setTimeout(() => {
@@ -270,6 +271,11 @@ module.exports = (server) => {
       } else {
         votes[roomId].abstain += 1;
       }
+      io.to(roomId).emit("voteUpdated", votes[roomId])
+    });
+
+    socket.on("dismissMeeting", (roomId) => {
+      io.to(roomId).emit("meetingDismissed");
     });
 
     // 监听用户断开连接
@@ -312,6 +318,7 @@ module.exports = (server) => {
             delete rooms[roomId];
             delete motions[roomId];
             delete chairs[roomId];
+            delete votes[roomId];
           }
         }
       }, 3000); // 延迟 3 秒检查是否重新连接
