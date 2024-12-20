@@ -15,7 +15,7 @@ RONR, or Robert's Rules of Order Newly Revised, is a widely used manual of parli
 To get started with the frontend of the application, follow these steps:
 
 ```bash
-cd RONRmeeting-frontend
+cd frontend
 npm install
 npm run dev
 ```

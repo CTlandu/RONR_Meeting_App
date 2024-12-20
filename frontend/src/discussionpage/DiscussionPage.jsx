@@ -47,7 +47,8 @@ function DiscussionPage() {
   // 退出会议
   const handleExitMeeting = () => {
     socket.disconnect();
-    navigate("/profile");
+    
+    navigate("/review", { state: { meetingId: roomId, isLastMeeting: true, messages: messages } });
   };
 
   useEffect(() => {
