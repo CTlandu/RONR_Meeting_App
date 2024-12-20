@@ -26,7 +26,9 @@ app.post("/reviews", (req, res) => {
   }
 
   reviewsData[userId][meetingId][reviewId] = reviewData;
+  console.log(`saved review: ${meetingId}`);
   res.status(201).json({ message: "Review saved successfully" });
+  
 });
 
 // Get all reviews for a specific user and meeting
@@ -37,7 +39,9 @@ app.get("/reviews/:userId/:meetingId", (req, res) => {
     return res.status(404).json({ message: "No reviews found for this user and meeting" });
   }
 
+  console.log(`review: ${meetingId}`);
   res.status(200).json(reviewsData[userId][meetingId]);
+  
 });
 
 // Start the data server
